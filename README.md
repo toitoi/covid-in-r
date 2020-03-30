@@ -1,11 +1,11 @@
 # Covid-19 World Map (in-progress)
 
-- View Page -> https://toitoi.shinyapps.io/Covid-19/
+- View Page -> https://toitoi.shinyapps.io/covid-in-r/
 
 or build your own in rstudio, open new R session
 ```
 library('shiny')
-runGitHub("Covid-19", "toitoi", "master")
+runGitHub("covid-in-r", "toitoi", "master")
 ```
 
 主要功能(main functionalities):
