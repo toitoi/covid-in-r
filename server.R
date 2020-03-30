@@ -19,8 +19,29 @@ function(input, output, session) {
     filtered_country_df_by_date <- left_join(g_country_df, filtered_data_by_date, by="Country")
     # foundNaSubset <- filtered_country_df_by_date[which(is.na(filtered_country_df_by_date$Date)),]
     selected_column <- select(filtered_country_df_by_date, input$selected_category)
-    # selected_column%>%select(option_categories[1])
+    # selected_column <- select(option_categories[1])
     # watisthis <- paste(countryCaseByDate$Country, ":", selected_column[,1])
+  })
+  
+  df_pop_ratio <- reactive({
+    filtered_data_by_date <- filter(g_covid_data, Date == inputDate())
+    filtered_country_df_by_date <- inner_join(g_pop_est, filtered_data_by_date, by="Country")
+    # filtered_country_df_by_date <- impute(filtered_country_df_by_date)
+    selected_column <- select(filtered_country_df_by_date, input$selected_category)
+    filtered_country_df_by_date$ratio <- select(filtered_country_df_by_date, input$selected_category) / filtered_country_df_by_date$Population * 1000000
+    
+    # test block : 
+    # # arrange(g_covid_data, g_covid_data$Country)
+    # filtered_data_by_date <- filter(g_covid_data, Date == "2020-03-27")
+    # filtered_country_df_by_date <- inner_join(g_pop_est, filtered_data_by_date, by="Country")
+    # # filtered_country_df_by_date <- impute(filtered_country_df_by_date)
+    # selected_column <- select(filtered_country_df_by_date, g_option_categories[1])
+    # filtered_country_df_by_date$ratio <- select(filtered_country_df_by_date, g_option_categories[1]) / filtered_country_df_by_date$Population * 1000000
+    # filtered_country_df_by_date
+    
+    # normalize/standardize data using "caret"
+    trans = preProcess(filtered_country_df_by_date[,c(7)], method=c("BoxCox", "center", "scale", "pca"))
+    filtered_country_df_by_date$ratio = predict(trans, filtered_country_df_by_date[,c(7)])
   })
   
   bins<-seq(from = 0, to = 100, by = 10)
@@ -43,8 +64,8 @@ function(input, output, session) {
       addPolygons(stroke = FALSE,
                   smoothFactor = 0.3,
                   fillOpacity = 0.5,
-                  label = paste(g_country_list, ":", dfmap()[,1]),
-                  color = qpal(rescale(x = dfmap()[,1], to = c(0, 100),  na.rm=TRUE))
+                  label = paste(g_country_list, ":", df_pop_ratio()[,1]),
+                  color = qpal(rescale(x = df_pop_ratio()[,1], to = c(0, 100),  na.rm=TRUE))
       ) %>%
       setView(lng = 0, lat = 40, zoom = 2) %>%
       addLegend(

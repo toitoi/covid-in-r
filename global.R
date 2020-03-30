@@ -6,12 +6,14 @@ library(imputeMissings)
 library(DT)
 library(rlang)
 library(scales)
+library(caret)
 
 # Dataset download from : http://data.okfn.org/data/datasets/geo-boundaries-world-110m
 # geoJson intro : https://developer.here.com/blog/an-introduction-to-geojson
 # TODO : use realtime data by scraping
 # TODO : incorrect US map!!
-g_geojson<- geojson_read("countries.geojson", what = "sp")
+g_geojson <- geojson_read("countries.geojson", what = "sp")
+g_pop_est <-  data.frame("Country" = g_geojson$admin, "Population" = g_geojson$pop_est)
 
 # Read csv file
 # TODO : scrape data from https://datahub.io/core/covid-19/r/countries-aggregated.csv
