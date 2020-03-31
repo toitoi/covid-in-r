@@ -10,3 +10,6 @@ runGitHub("covid-in-r", "toitoi", "master")
 
 Get live data from datahub
 - https://datahub.io/docs/getting-started/getting-data
+
+Interactive maps with leafletJs
+https://leafletjs.com/
